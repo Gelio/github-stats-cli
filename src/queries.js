@@ -11,6 +11,11 @@ nodes {
     author {
       login
     }
+    labels(first: 100) {
+      nodes {
+        name
+      }
+    }
     reviews(first: $firstReviews) {
       nodes {
         author {
