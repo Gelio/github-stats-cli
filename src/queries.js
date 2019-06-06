@@ -5,6 +5,8 @@ nodes {
     permalink
     title
     updatedAt
+    createdAt
+    mergedAt
     changedFiles
     additions
     deletions
