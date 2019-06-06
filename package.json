@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "csv": "^5.1.1",
     "dotenv": "^8.0.0",
     "graphql-client": "^2.0.1"
   },
