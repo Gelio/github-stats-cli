@@ -2,7 +2,7 @@
   "name": "graphql-traverser",
   "version": "1.0.0",
   "description": "",
-  "main": "fetch-review-stats.js",
+  "main": "index.js",
   "dependencies": {
     "dotenv": "^8.0.0",
     "graphql-client": "^2.0.1"
