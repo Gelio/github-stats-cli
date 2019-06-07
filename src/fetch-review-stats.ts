@@ -1,22 +1,34 @@
-const {
+import {
+  RequestInformation,
   getInitialRequestInformation,
   getIntermediateRequestInformation
-} = require('./queries');
+} from './queries';
+import { PullRequest } from './types';
 
-/**
- * @param {*} client
- * @param {{ query: object, variables: object }} requestInformation
- */
-function makeGraphQLRequest(client, requestInformation) {
+interface PullRequestsResponse {
+  data: {
+    search: {
+      nodes: PullRequest[];
+      pageInfo: {
+        hasNextPage: boolean;
+        endCursor: string | null;
+      };
+    };
+  };
+}
+
+function makeGraphQLRequest(
+  client: any,
+  requestInformation: RequestInformation
+): Promise<PullRequestsResponse> {
   return client.query(requestInformation.query, requestInformation.variables);
 }
 
-/**
- * @param {*} client
- * @param {string} repository
- * @param {string} timeRange
- */
-async function fetchReviewStats(client, repository, timeRange) {
+export async function fetchReviewStats(
+  client: any,
+  repository: string,
+  timeRange: string
+) {
   const requestInformation = getInitialRequestInformation(
     repository,
     timeRange
@@ -24,7 +36,7 @@ async function fetchReviewStats(client, repository, timeRange) {
   let requestId = -1;
 
   console.log(`${++requestId}: fetching`);
-  const allNodes = [];
+  const allNodes: PullRequest[] = [];
   let response = (await makeGraphQLRequest(client, requestInformation)).data
     .search;
   allNodes.push(...response.nodes);
@@ -49,7 +61,3 @@ async function fetchReviewStats(client, repository, timeRange) {
 
   return allNodes;
 }
-
-module.exports = {
-  fetchReviewStats
-};

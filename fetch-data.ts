@@ -1,9 +1,12 @@
 require('dotenv').config();
 
-const { writeFileSync } = require('fs');
-const { fetchReviewStats } = require('./src/fetch-review-stats');
-const config = require('./src/config');
-const client = require('graphql-client')({
+import { writeFileSync } from 'fs';
+import { fetchReviewStats } from './src/fetch-review-stats';
+import { config } from './src/config';
+
+import * as createGraphQlClient from 'graphql-client';
+
+const client = createGraphQlClient({
   url: 'https://api.github.com/graphql',
   headers: {
     Authorization: `token ${config.authToken}`

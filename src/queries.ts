@@ -37,11 +37,19 @@ pageInfo {
   hasNextPage
 }`;
 
+export interface RequestInformation {
+  query: string;
+  variables: object;
+}
+
 /**
- * @param {string} repository
- * @param {string} timeRange
+ * REFACTOR: use a single query with optional `after` param
  */
-function getInitialRequestInformation(repository, timeRange) {
+
+export function getInitialRequestInformation(
+  repository: string,
+  timeRange: string
+): RequestInformation {
   return {
     query: `
 query GetRepositoryInfo($firstPrs: Int!, $firstReviews: Int!, $query: String!) {
@@ -58,13 +66,11 @@ search(first: $firstPrs, type: ISSUE, query: $query) {
   };
 }
 
-/**
- *
- * @param {string} repository
- * @param {string} timeRange
- * @param {string} pageCursor
- */
-function getIntermediateRequestInformation(repository, timeRange, pageCursor) {
+export function getIntermediateRequestInformation(
+  repository: string,
+  timeRange: string,
+  pageCursor: string
+): RequestInformation {
   return {
     query: `
 query GetRepositoryInfo($afterCursor: String!, $firstPrs: Int!, $firstReviews: Int!, $query: String!) {
@@ -81,8 +87,3 @@ search(first: $firstPrs, after: $afterCursor, type: ISSUE, query: $query) {
     }
   };
 }
-
-module.exports = {
-  getInitialRequestInformation,
-  getIntermediateRequestInformation
-};

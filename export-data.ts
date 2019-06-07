@@ -1,16 +1,17 @@
-const { readFileSync, writeFileSync } = require('fs');
-const { basename } = require('path');
-const csv = require('csv');
+import { readFileSync, writeFileSync } from 'fs';
+import { basename } from 'path';
+import * as csv from 'csv';
+import { PullRequest } from './src/types';
 
 const fileName = process.argv[2];
 if (!fileName) {
   console.error('Please provide the JSON file path as the first parameter');
-  return;
+  process.exit(1);
 }
 console.log('Reading from', fileName);
 const baseFileName = basename(fileName, '.json');
 
-const data = JSON.parse(readFileSync(fileName, 'utf8'));
+const data = JSON.parse(readFileSync(fileName, 'utf8')) as PullRequest[];
 
 const prsRows = [];
 const prStringifier = csv.stringify();
@@ -45,8 +46,11 @@ prStringifier.write([
   'title',
   'permalink',
   'createdAt',
+  'createdAtTimestamp',
   'mergedAt',
+  'mergedAtTimestamp',
   'updatedAt',
+  'updatedAtTimestamp',
   'changedFiles',
   'additions',
   'deletions',
@@ -58,6 +62,7 @@ reviewersStringifier.write([
   'prNumber',
   'reviewer',
   'publishedAt',
+  'publishedAtTimestamp',
   'state',
   'comments'
 ]);
@@ -68,8 +73,11 @@ data.forEach(pr => {
     pr.title,
     pr.permalink,
     pr.createdAt,
+    dateStringToTimestamp(pr.createdAt),
     pr.mergedAt,
+    dateStringToTimestamp(pr.mergedAt),
     pr.updatedAt,
+    dateStringToTimestamp(pr.updatedAt),
     pr.changedFiles,
     pr.additions,
     pr.deletions,
@@ -83,6 +91,7 @@ data.forEach(pr => {
       pr.number,
       review.author.login,
       review.publishedAt,
+      dateStringToTimestamp(review.publishedAt),
       review.state,
       review.comments.totalCount
     ]);
@@ -91,3 +100,7 @@ data.forEach(pr => {
 
 prStringifier.end();
 reviewersStringifier.end();
+
+function dateStringToTimestamp(dateString: string) {
+  return new Date(dateString).getTime();
+}
