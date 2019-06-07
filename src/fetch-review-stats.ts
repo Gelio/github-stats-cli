@@ -17,6 +17,8 @@ interface PullRequestsResponse {
   };
 }
 
+const REQUEST_DELAY_MS = 3000;
+
 function makeGraphQLRequest(
   client: any,
   requestInformation: RequestInformation
@@ -43,7 +45,9 @@ export async function fetchReviewStats(
   console.log(`${requestId}: fetched`);
 
   while (response.pageInfo.hasNextPage) {
-    console.log(`${++requestId}: fetching`);
+    console.log(`${++requestId}: waiting...`);
+    await delay(REQUEST_DELAY_MS);
+    console.log(`${requestId}: fetching`);
     const intermediateRequestInformation = getIntermediateRequestInformation(
       repository,
       timeRange,
@@ -60,4 +64,10 @@ export async function fetchReviewStats(
   }
 
   return allNodes;
+}
+
+function delay(ms: number) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
 }
