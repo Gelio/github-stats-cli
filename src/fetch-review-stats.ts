@@ -51,7 +51,7 @@ export async function fetchReviewStats(
     const intermediateRequestInformation = getIntermediateRequestInformation(
       repository,
       timeRange,
-      response.pageInfo.endCursor
+      response.pageInfo.endCursor as string
     );
 
     const rawResponse = await makeGraphQLRequest(

@@ -10,7 +10,11 @@ if (!fileName) {
 const data = JSON.parse(readFileSync(fileName, 'utf8'));
 
 try {
-  console.log(JSON.stringify(reviewsPerEngineer(data), null, 2));
+  const results = reviewsPerEngineer(data);
+
+  Object.keys(results).forEach(author => {
+    console.log(`${author},${results[author]}`);
+  });
 } catch (error) {
   console.error(error);
 }
