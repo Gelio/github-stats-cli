@@ -88,3 +88,5 @@ typings/
 .dynamodb/
 
 data.json
+data-prs.csv
+data-reviewers.csv
