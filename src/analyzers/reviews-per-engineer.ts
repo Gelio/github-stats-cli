@@ -1,17 +1,17 @@
 import { uniq } from 'ramda';
 
-import { PullRequest } from '../types';
+import { PullRequest, ReviewState } from '../types';
+
+const acceptableReviewStates: ReviewState[] = ['APPROVED', 'CHANGES_REQUESTED'];
 
 export function reviewsPerEngineer(prs: PullRequest[]) {
   const engineersReviews: Record<string, number> = {};
-  const syncRegexp = /sync/i;
 
   prs.forEach(pr => {
-    if (syncRegexp.test(pr.title)) {
-      return;
-    }
-
-    const reviewers = pr.reviews.nodes.map(review => review.author.login);
+    const reviewers = pr.reviews.nodes
+      .filter(review => acceptableReviewStates.includes(review.state))
+      .map(review => review.author.login)
+      .filter(reviewer => reviewer !== pr.author.login);
     const uniqueReviewers = uniq(reviewers);
 
     uniqueReviewers.forEach(author => {
