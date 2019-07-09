@@ -6,6 +6,10 @@ import { prsCreated } from './src/analyzers/prs-created';
 import { timeToFirstReview } from './src/analyzers/time-to-first-review';
 import { timeToMerge } from './src/analyzers/time-to-merge';
 import { timeBetweenLastReviewAndMerge } from './src/analyzers/time-between-last-review-and-merge';
+import { substituteNames } from './src/substitute-names';
+
+const namesSubstitutions: Record<string, string> = {};
+
 
 const fileName = process.argv[2];
 if (!fileName) {
@@ -14,13 +18,16 @@ if (!fileName) {
 }
 
 const allPRs: PullRequest[] = JSON.parse(readFileSync(fileName, 'utf8'));
-const filteredPRs = allPRs.filter(pr => !/sync/i.test(pr.title));
 
 try {
-  const results = timeBetweenLastReviewAndMerge(filteredPRs);
+  const results = reviewsPerEngineer(allPRs);
+  const resultsWithSubstitutedNames = substituteNames(
+    results,
+    namesSubstitutions
+  );
 
-  Object.keys(results).forEach(author => {
-    console.log(`${author},"${results[author]}"`);
+  Object.keys(resultsWithSubstitutedNames).forEach(author => {
+    console.log(`"${author}","${resultsWithSubstitutedNames[author]}"`);
   });
 } catch (error) {
   console.error(error);
