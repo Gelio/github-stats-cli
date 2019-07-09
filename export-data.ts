@@ -13,7 +13,7 @@ const baseFileName = basename(fileName, '.json');
 
 const data = JSON.parse(readFileSync(fileName, 'utf8')) as PullRequest[];
 
-const prsRows = [];
+const prsRows: string[] = [];
 const prStringifier = csv.stringify();
 prStringifier.on('readable', () => {
   let row;
@@ -25,7 +25,7 @@ prStringifier.on('finish', () => {
   writeFileSync(`${baseFileName}-prs.csv`, prsRows.join(''), 'utf8');
 });
 
-const reviewersRows = [];
+const reviewersRows: string[] = [];
 const reviewersStringifier = csv.stringify();
 reviewersStringifier.on('readable', () => {
   let row;
