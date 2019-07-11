@@ -1,4 +1,5 @@
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
+import { basename } from 'path';
 
 import { reviewsPerEngineer } from './src/analyzers/reviews-per-engineer';
 import { PullRequest } from './src/types';
@@ -16,19 +17,36 @@ if (!fileName) {
   console.error('Please provide the JSON file path as the first parameter');
   process.exit(1);
 }
+const baseFileName = basename(fileName, '.json');
 
 const allPRs: PullRequest[] = JSON.parse(readFileSync(fileName, 'utf8'));
 
+const metrics = [
+  reviewsPerEngineer,
+  prsCreated,
+  timeToFirstReview,
+  timeToMerge,
+  timeBetweenLastReviewAndMerge
+];
+
 try {
-  const results = reviewsPerEngineer(allPRs);
+  metrics.map(metric => {
+    const results = metric(allPRs);
   const resultsWithSubstitutedNames = substituteNames(
-    results,
+      results as any,
     namesSubstitutions
   );
 
-  Object.keys(resultsWithSubstitutedNames).forEach(author => {
-    console.log(`"${author}","${resultsWithSubstitutedNames[author]}"`);
+    const csvResults = Object.keys(resultsWithSubstitutedNames)
+      .map(author => `"${author}","${resultsWithSubstitutedNames[author]}"`)
+      .join('\r\n');
+
+    const resultsFileName = `${baseFileName}-${metric.name}.json`;
+    writeFileSync(resultsFileName, csvResults);
+    console.log(resultsFileName, 'done');
   });
+
+  console.log('Completed successfully');
 } catch (error) {
   console.error(error);
 }
