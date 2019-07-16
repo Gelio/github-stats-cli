@@ -26,7 +26,7 @@ First, specify `repository` and `timeRange` in [config.ts](src/config.ts).
 To fetch PR data, run:
 
 ```sh
-npx ts-node fetch-data.json
+npx ts-node fetch-data.ts
 ```
 
 This will download all PR data from GitHub and store it in a file specified in
