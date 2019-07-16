@@ -41,7 +41,7 @@ try {
       .map(author => `"${author}","${resultsWithSubstitutedNames[author]}"`)
       .join('\r\n');
 
-    const resultsFileName = `${baseFileName}-${metric.name}.json`;
+    const resultsFileName = `${baseFileName}-${metric.name}.csv`;
     writeFileSync(resultsFileName, csvResults);
     console.log(resultsFileName, 'done');
   });
