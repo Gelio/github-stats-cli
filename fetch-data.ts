@@ -30,7 +30,12 @@ function filterReviews(prs: PullRequest[]) {
   });
 }
 
-fetchReviewStats(client, config.repository, config.timeRange)
+fetchReviewStats(
+  client,
+  config.repository,
+  config.timeRange,
+  config.additionalQuerySuffix
+)
   .then(filterReviews)
   .then(body => {
     console.log(`Finished fetching. Saving to ${config.fileName}`);

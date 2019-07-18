@@ -29,11 +29,13 @@ function makeGraphQLRequest(
 export async function fetchReviewStats(
   client: any,
   repository: string,
-  timeRange: string
+  timeRange: string,
+  additionalQuerySuffix: string
 ) {
   const requestInformation = getInitialRequestInformation(
     repository,
-    timeRange
+    timeRange,
+    additionalQuerySuffix
   );
   let requestId = -1;
 
@@ -51,7 +53,8 @@ export async function fetchReviewStats(
     const intermediateRequestInformation = getIntermediateRequestInformation(
       repository,
       timeRange,
-      response.pageInfo.endCursor as string
+      response.pageInfo.endCursor as string,
+      additionalQuerySuffix
     );
 
     const rawResponse = await makeGraphQLRequest(

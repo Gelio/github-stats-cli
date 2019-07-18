@@ -1,3 +1,8 @@
+/**
+ * TODO: One query with optional `afterCursor` parameter can be used
+ * instead of having two separate queries.
+ */
+
 const commonQueryPart = `
 nodes {
   ... on PullRequest {
@@ -48,7 +53,8 @@ export interface RequestInformation {
 
 export function getInitialRequestInformation(
   repository: string,
-  timeRange: string
+  timeRange: string,
+  additionalQuerySuffix: string
 ): RequestInformation {
   return {
     query: `
@@ -61,7 +67,7 @@ search(first: $firstPrs, type: ISSUE, query: $query) {
     variables: {
       firstPrs: 100,
       firstReviews: 100,
-      query: `type:pr repo:${repository} updated:${timeRange} sort:updated-desc`
+      query: `type:pr repo:${repository} updated:${timeRange} sort:updated-desc ${additionalQuerySuffix}`
     }
   };
 }
@@ -69,7 +75,8 @@ search(first: $firstPrs, type: ISSUE, query: $query) {
 export function getIntermediateRequestInformation(
   repository: string,
   timeRange: string,
-  pageCursor: string
+  pageCursor: string,
+  additionalQuerySuffix: string
 ): RequestInformation {
   return {
     query: `
@@ -83,7 +90,7 @@ search(first: $firstPrs, after: $afterCursor, type: ISSUE, query: $query) {
       afterCursor: pageCursor,
       firstPrs: 100,
       firstReviews: 100,
-      query: `type:pr repo:${repository} updated:${timeRange} sort:updated-desc`
+      query: `type:pr repo:${repository} updated:${timeRange} sort:updated-desc ${additionalQuerySuffix}`
     }
   };
 }
