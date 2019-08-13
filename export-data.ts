@@ -56,7 +56,9 @@ prStringifier.write([
   'deletions',
   'linesChanged',
   'author',
-  'labels'
+  'labels',
+  'merged',
+  'closed'
 ]);
 reviewersStringifier.write([
   'prNumber',
@@ -83,7 +85,9 @@ data.forEach(pr => {
     pr.deletions,
     pr.additions + pr.deletions,
     pr.author.login,
-    pr.labels.nodes.map(node => node.name).join(',')
+    pr.labels.nodes.map(node => node.name).join(','),
+    pr.merged,
+    pr.closed
   ]);
 
   pr.reviews.nodes.forEach(review => {

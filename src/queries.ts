@@ -12,6 +12,8 @@ nodes {
     updatedAt
     createdAt
     mergedAt
+    closed
+    merged
     changedFiles
     additions
     deletions

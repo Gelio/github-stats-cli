@@ -22,16 +22,18 @@ export interface GraphData<T extends object> {
 }
 
 export interface PullRequest {
+  additions: number;
+  author: User;
+  changedFiles: number;
+  closed: boolean;
+  createdAt: string;
+  deletions: number;
+  labels: GraphData<Label>;
+  merged: boolean;
+  mergedAt: string;
   number: number;
   permalink: string;
+  reviews: GraphData<Review>;
   title: string;
   updatedAt: string;
-  createdAt: string;
-  mergedAt: string;
-  changedFiles: number;
-  additions: number;
-  deletions: number;
-  author: User;
-  labels: GraphData<Label>;
-  reviews: GraphData<Review>;
 }
